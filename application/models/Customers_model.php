@@ -4,8 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Customers_model extends CI_Model {
 
 	var $table = 'tbl_customers';
-	var $column_order = array(null, 'FirstName','LastName','phone','address','city','country'); //set column field database for datatable orderable
-	var $column_search = array('FirstName','LastName','phone','address','city','country'); //set column field database for datatable searchable 
+	// var $column_order = array(null, 'customers.FirstName as FirstName','customers.LastName as LastName','customers.phone as phone','customers.address as address','customers.city as city','artikel.judul as judul'); //set column field database for datatable orderable
+	// var $column_search = array('customers.FirstName as Firstname','customers.LastName as Lastname','customers.phone as phone','customers.address as address','customers.city as city','artikel.judul as judul'); //set column field database for datatable searchable 
+	var $column_order = array(null, 'FirstName','LastName','phone','address','city_name','judul'); //set column field database for datatable orderable
+	var $column_search = array('Firstname','Lastname','phone','address','judul', 'customers.city', 'artikel.city'); //set column field database for datatable searchable 
 	var $order = array('id' => 'asc'); // default order 
 
 	public function __construct()
@@ -14,10 +16,17 @@ class Customers_model extends CI_Model {
 		$this->load->database();
 	}
 
-	private function _get_datatables_query()
+	protected $condition = array();
+	private function _get_datatables_query($where = array())
 	{
 		
-		$this->db->from($this->table);
+		$this->db->select('customers.FirstName, customers.LastName, customers.phone, customers.address, customers.city as city_name, artikel.judul as judul, artikel.city as artikel_city');
+		$this->db->from($this->table . ' as customers');
+		$this->db->join('tbl_artikel as artikel', 'artikel.id_artikel = customers.id_artikel','left');
+		if (count($where) > 0) {
+			$this->db->where($where);
+			$this->db->order_by('customers.id','desc');   
+		}
 
 		$i = 0;
 	
@@ -53,9 +62,10 @@ class Customers_model extends CI_Model {
 		}
 	}
 
-	function get_datatables()
+	function get_datatables($where)
 	{
-		$this->_get_datatables_query();
+		$this->condition = $where;
+		$this->_get_datatables_query($this->condition);
 		if($_POST['length'] != -1)
 		$this->db->limit($_POST['length'], $_POST['start']);
 		$query = $this->db->get();
@@ -64,7 +74,7 @@ class Customers_model extends CI_Model {
 
 	function count_filtered()
 	{
-		$this->_get_datatables_query();
+		$this->_get_datatables_query($this->condition);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}

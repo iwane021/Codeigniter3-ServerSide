@@ -17,7 +17,10 @@ class Customers extends CI_Controller {
 
 	public function ajax_list()
 	{
-		$list = $this->customers->get_datatables();
+		$where = array();
+		// $where['artikel.id_artikel'] = 2;
+
+		$list = $this->customers->get_datatables($where);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $customers) {
@@ -28,8 +31,10 @@ class Customers extends CI_Controller {
 			$row[] = $customers->LastName;
 			$row[] = $customers->phone;
 			$row[] = $customers->address;
-			$row[] = $customers->city;
-			$row[] = $customers->country;
+			$row[] = $customers->city_name;
+			$row[] = $customers->judul;
+			$row[] = $customers->artikel_city;
+			// $row[] = 'Default';
 
 			$data[] = $row;
 		}

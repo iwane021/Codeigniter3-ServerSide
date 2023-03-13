@@ -29,7 +29,8 @@
                     <th>Phone</th>
                     <th>Address</th>
                     <th>City</th>
-                    <th>Country</th>
+                    <th>Judul</th>
+                    <th>Artikel City</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,7 +44,8 @@
                     <th>Phone</th>
                     <th>Address</th>
                     <th>City</th>
-                    <th>Country</th>
+                    <th>Judul</th>
+                    <th>Artikel City</th>
                 </tr>
             </tfoot>
         </table>
